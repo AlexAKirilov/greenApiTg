@@ -1,0 +1,16 @@
+.textarea {
+	flex: 1;
+	width: 100%;
+	min-height: 40px;
+	max-height: 120px;
+	padding: 10px 14px;
+	border: 1px solid #dfe1e5;
+	border-radius: 20px;
+	transition: border-color 0.2s;
+	resize: none;
+}
+
+.textarea:focus {
+	border-color: #3390ec;
+	outline: none;
+}

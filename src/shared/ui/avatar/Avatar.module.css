@@ -1,0 +1,26 @@
+.avatar {
+	display: flex;
+	flex-shrink: 0;
+	justify-content: center;
+	align-items: center;
+	color: #ffffff;
+	font-weight: 600;
+	background: #3390ec;
+	border-radius: 50%;
+}
+
+.md {
+	width: 48px;
+	height: 48px;
+	font-size: 18px;
+}
+
+.sm {
+	width: 42px;
+	height: 42px;
+	font-size: 16px;
+}
+
+.muted {
+	background: rgb(255 255 255 / 25%);
+}

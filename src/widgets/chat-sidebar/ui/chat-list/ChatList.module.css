@@ -1,0 +1,122 @@
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	width: 340px;
+	min-width: 280px;
+	background: #ffffff;
+	border-right: 1px solid #e0e0e0;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.title {
+	margin: 0;
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.actions {
+	display: flex;
+	gap: 8px;
+}
+
+.newChatForm {
+	display: flex;
+	gap: 8px;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.newChatInput {
+	flex: 1;
+}
+
+.errorMessage {
+	margin: 12px 16px 0;
+}
+
+.list {
+	flex: 1;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	list-style: none;
+}
+
+.item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 10px 16px;
+	text-align: left;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.item:hover {
+	background: #f4f4f5;
+}
+
+.itemActive {
+	background: #3390ec;
+}
+
+.itemActive:hover {
+	background: #2b7fd4;
+}
+
+.itemContent {
+	flex: 1;
+	min-width: 0;
+}
+
+.itemHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+}
+
+.itemTitle {
+	overflow: hidden;
+	font-weight: 600;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.itemTime {
+	flex-shrink: 0;
+	color: #707579;
+	font-size: 12px;
+}
+
+.itemPreview {
+	margin-top: 2px;
+	overflow: hidden;
+	color: #707579;
+	font-size: 13px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.itemActive .itemTitle,
+.itemActive .itemPreview,
+.itemActive .itemTime {
+	color: #ffffff;
+}
+
+.empty {
+	padding: 24px 16px;
+	color: #707579;
+	font-size: 13px;
+	text-align: center;
+}

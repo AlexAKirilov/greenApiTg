@@ -1,0 +1,426 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Telegram Chat — GREEN-API (используемые методы)",
+    "description": "HTTP API, вызываемые приложением. DTO соответствуют типам в `src/entities/green-api/api/dto/`.\n\nДокументация GREEN-API: https://green-api.com/en/telegram/docs/",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.green-api.com",
+      "description": "Production API (значение по умолчанию в приложении)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Sending",
+      "description": "Отправка сообщений"
+    },
+    {
+      "name": "Receiving",
+      "description": "Получение и подтверждение уведомлений"
+    }
+  ],
+  "paths": {
+    "/waInstance{idInstance}/sendMessage/{apiTokenInstance}": {
+      "post": {
+        "tags": ["Sending"],
+        "operationId": "sendMessage",
+        "summary": "SendMessage",
+        "description": "Отправка текстового сообщения в чат. Реализация: `sendMessage()` в `src/entities/green-api/api/greenApi.ts`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdInstance"
+          },
+          {
+            "$ref": "#/components/parameters/ApiTokenInstance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessageRequestDto"
+              },
+              "examples": {
+                "personalChat": {
+                  "summary": "Личный чат",
+                  "value": {
+                    "chatId": "10000000",
+                    "message": "I use GREEN-API to send this message!"
+                  }
+                },
+                "byPhone": {
+                  "summary": "По номеру телефона",
+                  "value": {
+                    "chatId": "79876543210@c.us",
+                    "message": "I use GREEN-API to send this message!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Сообщение поставлено в очередь отправки",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponseDto"
+                },
+                "example": {
+                  "idMessage": "1769676078000"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/waInstance{idInstance}/receiveNotification/{apiTokenInstance}": {
+      "get": {
+        "tags": ["Receiving"],
+        "operationId": "receiveNotification",
+        "summary": "ReceiveNotification",
+        "description": "Получение одного входящего уведомления из очереди. При пустой очереди в течение `receiveTimeout` возвращается пустое тело. Реализация: `receiveNotification()` в `src/entities/green-api/api/greenApi.ts`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdInstance"
+          },
+          {
+            "$ref": "#/components/parameters/ApiTokenInstance"
+          },
+          {
+            "name": "receiveTimeout",
+            "in": "query",
+            "required": false,
+            "description": "Таймаут ожидания уведомления, 5–60 секунд (по умолчанию 5)",
+            "schema": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 60,
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Уведомление из очереди или пустой ответ, если очередь пуста",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReceiveNotificationResponseDto"
+                },
+                "examples": {
+                  "textMessage": {
+                    "summary": "Входящее текстовое сообщение",
+                    "value": {
+                      "receiptId": 1234567,
+                      "body": {
+                        "typeWebhook": "incomingMessageReceived",
+                        "instanceData": {
+                          "idInstance": 410000001,
+                          "wid": "79876543210@c.us",
+                          "typeInstance": "telegram"
+                        },
+                        "timestamp": 1763115112,
+                        "idMessage": "126543123451133331119",
+                        "senderData": {
+                          "chatId": "10000000",
+                          "chatName": "Vasilisa",
+                          "senderName": "Vasilisa the Wise",
+                          "senderPhoneNumber": 79876543210
+                        },
+                        "messageData": {
+                          "typeMessage": "textMessage",
+                          "textMessageData": {
+                            "textMessage": "Hello from Green-API!"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "emptyQueue": {
+                    "summary": "Очередь пуста (клиент трактует как отсутствие уведомления)",
+                    "value": {}
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/waInstance{idInstance}/deleteNotification/{apiTokenInstance}/{receiptId}": {
+      "delete": {
+        "tags": ["Receiving"],
+        "operationId": "deleteNotification",
+        "summary": "DeleteNotification",
+        "description": "Удаление обработанного уведомления из очереди. Реализация: `deleteNotification()` в `src/entities/green-api/api/greenApi.ts`.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdInstance"
+          },
+          {
+            "$ref": "#/components/parameters/ApiTokenInstance"
+          },
+          {
+            "name": "receiptId",
+            "in": "path",
+            "required": true,
+            "description": "Идентификатор доставки из ответа ReceiveNotification",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Результат удаления уведомления",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteNotificationResponseDto"
+                },
+                "example": {
+                  "result": true,
+                  "reason": ""
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "IdInstance": {
+        "name": "idInstance",
+        "in": "path",
+        "required": true,
+        "description": "Номер инстанса GREEN-API",
+        "schema": {
+          "type": "string",
+          "example": "1100000000"
+        }
+      },
+      "ApiTokenInstance": {
+        "name": "apiTokenInstance",
+        "in": "path",
+        "required": true,
+        "description": "Токен доступа к инстансу",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "SendMessageRequestDto": {
+        "type": "object",
+        "description": "Тело запроса SendMessage",
+        "required": ["chatId", "message"],
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "description": "Идентификатор чата"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 4096,
+            "description": "Текст сообщения"
+          }
+        }
+      },
+      "SendMessageResponseDto": {
+        "type": "object",
+        "description": "Ответ SendMessage",
+        "required": ["idMessage"],
+        "properties": {
+          "idMessage": {
+            "type": "string",
+            "description": "Идентификатор отправленного сообщения"
+          }
+        }
+      },
+      "ReceiveNotificationQueryDto": {
+        "type": "object",
+        "description": "Query-параметры ReceiveNotification",
+        "properties": {
+          "receiveTimeout": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "default": 5,
+            "description": "Таймаут ожидания уведомления в секундах"
+          }
+        }
+      },
+      "ReceiveNotificationResponseDto": {
+        "type": "object",
+        "description": "Ответ ReceiveNotification (может быть пустым объектом, если уведомлений нет)",
+        "properties": {
+          "receiptId": {
+            "type": "integer",
+            "description": "Идентификатор для DeleteNotification"
+          },
+          "body": {
+            "$ref": "#/components/schemas/IncomingNotificationBodyDto"
+          }
+        }
+      },
+      "IncomingNotificationBodyDto": {
+        "type": "object",
+        "description": "Тело входящего уведомления",
+        "required": ["typeWebhook", "timestamp", "idMessage"],
+        "properties": {
+          "typeWebhook": {
+            "type": "string",
+            "example": "incomingMessageReceived"
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Unix timestamp в секундах"
+          },
+          "idMessage": {
+            "type": "string"
+          },
+          "instanceData": {
+            "$ref": "#/components/schemas/InstanceDataDto"
+          },
+          "senderData": {
+            "$ref": "#/components/schemas/IncomingSenderDataDto"
+          },
+          "messageData": {
+            "$ref": "#/components/schemas/IncomingMessageDataDto"
+          }
+        }
+      },
+      "InstanceDataDto": {
+        "type": "object",
+        "properties": {
+          "idInstance": {
+            "type": "integer"
+          },
+          "wid": {
+            "type": "string"
+          },
+          "typeInstance": {
+            "type": "string",
+            "example": "telegram"
+          }
+        }
+      },
+      "IncomingSenderDataDto": {
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string"
+          },
+          "chatName": {
+            "type": "string"
+          },
+          "senderName": {
+            "type": "string"
+          },
+          "senderPhoneNumber": {
+            "type": "integer"
+          }
+        }
+      },
+      "IncomingMessageDataDto": {
+        "type": "object",
+        "properties": {
+          "typeMessage": {
+            "type": "string",
+            "example": "textMessage"
+          },
+          "textMessageData": {
+            "$ref": "#/components/schemas/TextMessageDataDto"
+          }
+        }
+      },
+      "TextMessageDataDto": {
+        "type": "object",
+        "required": ["textMessage"],
+        "properties": {
+          "textMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteNotificationResponseDto": {
+        "type": "object",
+        "description": "Ответ DeleteNotification",
+        "required": ["result"],
+        "properties": {
+          "result": {
+            "type": "boolean",
+            "description": "true — уведомление удалено из очереди"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Причина неудачного удаления"
+          }
+        }
+      },
+      "ApiErrorDto": {
+        "type": "object",
+        "description": "Типичный ответ GREEN-API при ошибке",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Ошибка запроса (валидация, webhook URL и т.д.)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiErrorDto"
+            }
+          },
+          "text/plain": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Внутренняя ошибка сервера",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiErrorDto"
+            }
+          }
+        }
+      }
+    }
+  }
+}

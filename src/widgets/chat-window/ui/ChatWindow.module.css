@@ -1,0 +1,54 @@
+.container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-width: 0;
+	background: #ffffff;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 16px;
+	background: #ffffff;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.info {
+	flex: 1;
+	min-width: 0;
+}
+
+.name {
+	overflow: hidden;
+	font-weight: 600;
+	font-size: 15px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.status {
+	color: #707579;
+	font-size: 13px;
+}
+
+.empty {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	color: #707579;
+	background: #e6ebee;
+}
+
+.emptyIcon {
+	font-size: 48px;
+	opacity: 0.5;
+}
+
+.emptyText {
+	font-size: 15px;
+}

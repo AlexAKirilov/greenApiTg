@@ -1,0 +1,19 @@
+.error {
+	padding: 10px 12px;
+	color: #e53935;
+	font-size: 13px;
+	background: #ffebee;
+	border-radius: 8px;
+}
+
+.block {
+	margin-bottom: 16px;
+}
+
+.overlay {
+	position: absolute;
+	right: 0;
+	bottom: 100%;
+	left: 0;
+	padding: 8px 12px;
+}

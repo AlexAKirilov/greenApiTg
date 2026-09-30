@@ -1,0 +1,46 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100%;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.form {
+	width: 100%;
+	max-width: 400px;
+	padding: 32px;
+	background: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 8px 32px rgb(0 0 0 / 15%);
+}
+
+.title {
+	margin: 0 0 8px;
+	font-weight: 600;
+	font-size: 24px;
+	text-align: center;
+}
+
+.subtitle {
+	margin: 0 0 24px;
+	color: #707579;
+	font-size: 14px;
+	text-align: center;
+}
+
+.hint {
+	margin-top: 16px;
+	color: #707579;
+	font-size: 12px;
+	text-align: center;
+}
+
+.hint a {
+	color: #3390ec;
+	text-decoration: none;
+}
+
+.hint a:hover {
+	text-decoration: underline;
+}
